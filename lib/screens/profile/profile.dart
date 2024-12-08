@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sightfinal/constants/routes.dart';
@@ -15,43 +14,39 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Fluttertoast.showToast(
-                  msg: "You've been signed out",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                );
-                Routes.instance.push(widget: Login(), context: context);
-                // Navigate to login screen here
-              },
-              child: Text('Sign Out'),
-            ),
-            ElevatedButton(
-  onPressed: () async {
-    String? email = FirebaseAuth.instance.currentUser?.email;
-    if (email != null) {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Fluttertoast.showToast(
-        msg: "Password reset email sent to $email",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
-    } else {
-      Fluttertoast.showToast(
-        msg: "Error: No email found for the current user",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
-    }
-  },
-  child: Text('Change Password'),
-),
-
+            _buildSignOutButton(context),
+            SizedBox(height: 20),
+            _buildChangePasswordButton(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSignOutButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Fluttertoast.showToast(
+          msg: "You've been signed out",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+        Routes.instance.push(widget: Login(), context: context);
+      },
+      child: Text('Sign Out'),
+    );
+  }
+
+  Widget _buildChangePasswordButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Fluttertoast.showToast(
+          msg: "Password reset email sent",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      },
+      child: Text('Change Password'),
     );
   }
 }

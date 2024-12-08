@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,6 +5,7 @@ import '../../../constants/routes.dart';
 import '../../../widgets/primary_button/primary_button.dart';
 import '../../../widgets/top_titles/top_titles.dart';
 import '../login/login.dart';
+
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -15,10 +15,11 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool isShowPassword = true;
-  TextEditingController email=TextEditingController();
-  TextEditingController password=TextEditingController();
-  TextEditingController name=TextEditingController();
-  TextEditingController phone=TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController phone = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,8 +76,6 @@ class _SignUpState extends State<SignUp> {
                     onPressed: () {
                       setState(() {
                         isShowPassword = !isShowPassword;
-                        // ignore: avoid_print
-                        print(isShowPassword);
                       });
                     },
                     padding: EdgeInsets.zero,
@@ -86,33 +85,28 @@ class _SignUpState extends State<SignUp> {
             const SizedBox(
               height: 30.0,
             ),
-          PrimaryButton(
-  title: "Create an Account",
-  onPressed: () async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email.text,
-        password: password.text,
-      );
-      Routes.instance.push(widget: const Login(), context: context);
-      // User successfully signed up. Navigate to another screen here.
-    } on FirebaseAuthException catch (e) {
-      String message = '';  // Provide an initial value
-      if (e.code == 'weak-password') {
-        message = 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        message = 'The account already exists for that email.';
-      }
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
-    } catch (e) {
-      print(e);
-    }
-  },
-),         
+            PrimaryButton(
+              title: "Create an Account",
+              onPressed: () {
+                if (email.text.isNotEmpty &&
+                    password.text.isNotEmpty &&
+                    name.text.isNotEmpty &&
+                    phone.text.isNotEmpty) {
+                  Fluttertoast.showToast(
+                    msg: "Account created successfully!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                  );
+                  Routes.instance.push(widget: const Login(), context: context);
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Please fill all fields",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                  );
+                }
+              },
+            ),
             const SizedBox(
               height: 12.0,
             ),

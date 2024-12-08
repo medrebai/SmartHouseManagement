@@ -5,7 +5,6 @@ import 'package:sightfinal/screens/graph.dart';
 import 'package:sightfinal/screens/splitscreen/splitscreen.dart';
 import '../../../util/smart_devices_box.dart';
 import '../../constants/routes.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -27,26 +26,12 @@ class _HomePageState extends State<HomePage> {
     ["TV", "lib/icons/smart-tv.png", false],
     ["Fan", "lib/icons/fan.png", false],
   ];
-
   // power button switched
   void powerSwitchChanged(bool value, int index) {
     setState(() {
       mySmartDevices[index][2] = value;
     });
-
-    // Create a reference to the database.
-    final DatabaseReference databaseReference =
-        FirebaseDatabase.instance.reference();
-
-    // If the power switch is turned on, send a value of 1 to app/priseX, where X is the index of the smart device.
-    if (value == true) {
-      databaseReference.child('app/prise${index + 1}').set(1);
-    } else {
-      // You can also handle the case when the power switch is turned off.
-      databaseReference.child('app/prise${index + 1}').set(0);
-    }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,13 +51,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // menu icon
-                    Icon(
-                      Icons.menu,
-                      color: Colors.grey[800],
-                      size: MediaQuery.of(context).size.width * 0.1,
-                    ),
-                    const SizedBox(width: 1),
-                    CupertinoButton(
+                      CupertinoButton(
                       child: const Icon(
                         Icons.graphic_eq_outlined,
                         size: 45,
@@ -90,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                             context: context);
                       },
                       child: const Icon(
-                        Icons.person,
+                        Icons.home,
                         size: 45,
                         color: Colors.green,
                       ),

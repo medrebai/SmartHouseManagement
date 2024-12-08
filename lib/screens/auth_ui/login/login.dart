@@ -1,19 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import '../../../constants/constants.dart';
 import '../../../constants/routes.dart';
 import '../../../widgets/primary_button/primary_button.dart';
 import '../../../widgets/top_titles/top_titles.dart';
 import '../../splitscreen/splitscreen.dart';
 import '../sign_up/sign_up.dart';
-
-
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -66,36 +59,13 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 30.0),
-             PrimaryButton(
-          title: "Login",
-          onPressed: () async {
-            try {
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-        // User successfully signed in. Navigate to another screen here.
-        Routes.instance.push(widget: ConsumptionManagementPage(), context: context);
-            } on FirebaseAuthException catch (e) {
-        String message = '';
-        if (e.code == 'user-not-found') {
-          message = 'No user found for that email.';
-        } else if (e.code == 'wrong-password') {
-          message = 'Wrong password provided for that user.';
-        }
-        if (message.isNotEmpty) {  // Only show the toast if there's a message
-          Fluttertoast.showToast(
-            msg: message,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-          );
-        }
-            } catch (e) {
-        print(e);
-            }
-          },
-        ),
-        
+              PrimaryButton(
+                title: "Login",
+                onPressed: () {
+                  // Navigate to another screen here.
+                  Routes.instance.push(widget: ConsumptionManagementPage(), context: context);
+                },
+              ),
               const SizedBox(height: 12.0),
               const Center(
                 child: Text("Don't have an account?"),
@@ -119,15 +89,4 @@ class _LoginState extends State<Login> {
     );
   }
 
-  bool loginValidation(String email, String password) {
-    if (email.isEmpty) {
-      showMessage("Email is Empty");
-      return false;
-    } else if (password.isEmpty) {
-      showMessage("Password is Empty");
-      return false;
-    } else {
-      return true;
-    }
-  }
 }

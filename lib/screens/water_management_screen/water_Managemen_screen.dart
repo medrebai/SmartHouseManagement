@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sightfinal/constants/routes.dart';
-import 'package:sightfinal/screens/graph.dart';
 import 'package:sightfinal/screens/splitscreen/splitscreen.dart';
-import 'package:sightfinal/screens/water_management_screen/graph2.dart';
 import 'package:sightfinal/util/smart_devices_box.dart';
 
 class WaterManagementPage extends StatefulWidget {
@@ -16,7 +13,6 @@ class WaterManagementPage extends StatefulWidget {
 }
 
 class _WaterManagementPageState extends State<WaterManagementPage> {
-  DatabaseReference dbRef = FirebaseDatabase(databaseURL: 'https://sightfinal-default-rtdb.firebaseio.com/').reference();
   double? flowRate;
   String? waterQuality;
   double? waterFlow;
@@ -31,56 +27,12 @@ class _WaterManagementPageState extends State<WaterManagementPage> {
   @override
   void initState() {
     super.initState();
-    readData();
-  }
-
-  void readData() {
-  dbRef.child('app/FlowRate').onValue.listen((event) {
-    final snapshot = event.snapshot;
-    if (snapshot.exists) {
-      setState(() {
-        flowRate = (snapshot.value as num)?.toDouble();
-      });
-    } else {
-      print('No FlowRate data available.');
-    }
-  });
-
-    dbRef.child('app/WaterQuality').onValue.listen((event) {
-      final snapshot = event.snapshot;
-      if (snapshot.exists) {
-        setState(() {
-          waterQuality = snapshot.value as String?;
-        });
-      } else {
-        print('No WaterQuality data available.');
-      }
-    });
-
-    dbRef.child('app/WaterFlow').onValue.listen((event) {
-      final snapshot = event.snapshot;
-      if (snapshot.exists) {
-        setState(() {
-          waterFlow = snapshot.value as double?;
-        });
-      } else {
-        print('No WaterFlow data available.');
-      }
-    });
   }
 
   void waterSwitchChanged(bool value, int index) {
     setState(() {
       myWaterDevices[index][2] = value;
     });
-
-    final DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
-
-    if (value == true) {
-      databaseReference.child('app/waterDevice${index + 1}').set(1);
-    } else {
-      databaseReference.child('app/waterDevice${index + 1}').set(0);
-    }
   }
 
   @override
@@ -100,13 +52,7 @@ class _WaterManagementPageState extends State<WaterManagementPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // menu icon
-                    Icon(
-                      Icons.menu,
-                      color: Colors.grey[800],
-                      size: MediaQuery.of(context).size.width * 0.1,
-                    ),
-                    const SizedBox(width: 1),
+                    // menu icon          
                     CupertinoButton(
                       child: const Icon(
                         Icons.graphic_eq_outlined,
@@ -114,7 +60,7 @@ class _WaterManagementPageState extends State<WaterManagementPage> {
                         color: Colors.green,
                       ),
                       onPressed: () {
-                        Routes.instance.push(widget: Stats1(), context: context);
+                        
                       },
                     ),
                     // account icon
@@ -125,7 +71,7 @@ class _WaterManagementPageState extends State<WaterManagementPage> {
                             context: context);
                       },
                       child: const Icon(
-                        Icons.person,
+                        Icons.home ,
                         size: 45,
                         color: Colors.green,
                       ),
@@ -154,21 +100,21 @@ class _WaterManagementPageState extends State<WaterManagementPage> {
                       ),
                     ),
                     Text(
-                      'Flow Rate: ${flowRate ?? 'Not available'}',
+                      'Flow Rate: 1m',
                       style: GoogleFonts.openSans(
                         fontSize: MediaQuery.of(context).size.width * 0.05,
                         color: Colors.grey.shade800,
                       ),
                     ),
                     Text(
-                      'Water Quality: ${waterQuality ?? 'Not available'}',
+                      'Water Quality: Good',
                       style: GoogleFonts.openSans(
                         fontSize: MediaQuery.of(context).size.width * 0.05,
                         color: Colors.grey.shade800,
                       ),
                     ),
                     Text(
-                      'Water Flow: ${waterFlow ?? 'Not available'}',
+                      'Water Flow: 1l/10s',
                       style: GoogleFonts.openSans(
                         fontSize: MediaQuery.of(context).size.width * 0.05,
                         color: Colors.grey.shade800,
